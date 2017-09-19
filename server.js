@@ -4,10 +4,10 @@
 // Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
-var logger = require("morgan");
+var exphbs = require("express-handlebars");
 var mongoose = require("mongoose");
 // Requiring our Note and Article models
-var Note = require("./models/Note.js");
+var Note = require("./models/Comment.js");
 var Article = require("./models/Article.js");
 // Our scraping tools
 var request = require("request");
@@ -19,14 +19,17 @@ mongoose.Promise = Promise;
 // Initialize Express
 var app = express();
 
-// Use morgan and body parser with our app
-app.use(logger("dev"));
+// Use body parser with our app
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
 
 // Make public a static dir
 app.use(express.static("public"));
+
+//always shows main layout, route will determine what gets rendered inside of {{{body}}}
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
 //replace local db with mongodB_URI
@@ -46,6 +49,12 @@ db.once("open", function() {
 
 // Routes
 // ======
+
+app.get("/", function(req, res) {
+	res.render("index", {
+		"news": ["article1", "article2"],
+	});
+});
 
 // A GET request to scrape the news website
 app.get("/scrape", function(req, res) {
