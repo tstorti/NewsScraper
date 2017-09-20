@@ -48,23 +48,8 @@ db.once("open", function() {
 
 // Routes
 // ======
-
-//tempData for testing handlebars
-tempData = [];
-
-for(var i=0;i<3;i++){
-	var newArticle={
-		headline:"headline"+i,
-		summary:"summary"+i,
-		url:"url"+i,
-	};
-	tempData.push(newArticle);
-}
-
 app.get("/", function(req, res) {
-	res.render("index", {
-		"articles": tempData,
-	});
+
 });
 
 // A GET request to scrape the news website
@@ -100,7 +85,6 @@ app.get("/scrape", function(req, res) {
 					console.log(doc);
 				}
 			});
-
 		});
 	});
 	// Tell the browser that we finished scraping the text
@@ -117,12 +101,16 @@ app.get("/articles", function(req, res) {
 		}
 		// Or send the doc to the browser as a json object
 		else {
-			res.json(doc);
+			//TODO: still an issue with the first document which is scraped
+			res.render("index", {
+				"articles": doc,
+			});
+			
 		}
 	});
 });
 
-// Grab an article by it's ObjectId
+// Grab an article comments by it's ObjectId
 app.get("/articles/:id", function(req, res) {
 	
 });

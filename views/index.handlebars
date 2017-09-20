@@ -2,8 +2,15 @@
 
 
 <div>Articles</div>
+<div>--------------------------------------------</div>
 {{#each articles }}
-	<div>{{headline}}</div>
+	<h4>{{headline}}</h4>
 	<div>{{summary}}</div>
-	<div>{{url}}</div>
+	<div>
+		<a href="{{url}}">{{url}}</a>
+	</div>
+	<div>
+		<button class='js-add-comment'>Add Comment</button>
+		<button class='js-show-comments'>Show Comments</button>
+	<div> --------------------------------</div>
 {{/each}}
