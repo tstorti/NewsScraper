@@ -1,4 +1,4 @@
-console.log("Hello app.js");
+
 
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
@@ -25,6 +25,6 @@ $(document).on("click", ".js-show-comments", function() {
 
     //do a get request for the correct data
     //show comments modal with info for specific id
-    
+
 });
 
