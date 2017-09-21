@@ -1,1 +1,11 @@
 /* css placeholder */
+
+.commentsInput{
+    border-radius: 5px;
+    margin:30px;
+    height: 100px;
+    width:80%;
+}
+.btn-margin{
+    margin:10px;
+}

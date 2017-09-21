@@ -10,7 +10,32 @@
 		<a href="{{url}}">{{url}}</a>
 	</div>
 	<div>
-		<button class='js-add-comment'>Add Comment</button>
-		<button class='js-show-comments'>Show Comments</button>
+		<button data-id="{{_id}}" class='btn btn-primary btn-margin js-show-comments'>Comments</button>
+		<button data-id="{{_id}}" class='btn btn-danger btn-margin js-delete'>Delete Article</button>
+	</div>
 	<div> --------------------------------</div>
 {{/each}}
+<div class="modal fade" id="comments" tabindex="-1" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div>
+				{{!-- Show all of the comments for the selected article --}}
+				{{#each comments}}
+				<div>
+					<div>{{title}}</div>
+					<div>{{body}}</div>
+					<button>Delete Comment</div>
+				</div>
+				{{/each}}
+				{{!-- Input box for new comments --}}
+				<div class="">
+					<input type="text" class="commentsInput" placeholder="Add Comment" id="comments-new">
+				</div>
+				<div>
+					<button class="btn btn-success btn-margin" type="button" id="save-comment">Save</button>
+				</div>
+				<div id="error-login"></div>
+			</div>
+		</div>
+	</div>
+</div> 
