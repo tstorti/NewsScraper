@@ -1,7 +1,7 @@
 {{!-- Setup the `index.handlebars` to have the template that Handlebars can render onto. --}}
 
-
 <div>Articles</div>
+<a href="./articles"><button id="scrape" class="btn btn-primary btn-margin">Get Articles!</button></a>
 <div>--------------------------------------------</div>
 {{#each articles }}
 	<h4>{{headline}}</h4>
@@ -32,7 +32,8 @@
 					<input type="text" class="commentsInput" placeholder="Add Comment" id="comments-new">
 				</div>
 				<div>
-					<button class="btn btn-success btn-margin" type="button" id="save-comment">Save</button>
+					<button class="btn btn-success btn-margin js-save-comment" type="button">Save</button>
+					<button class="btn btn-danger btn-margin js-close-modal" type="button">Close</button>
 				</div>
 				<div id="error-login"></div>
 			</div>

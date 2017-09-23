@@ -2,21 +2,21 @@
  * =============================================== */
 
 // Dependencies
-var express = require("express");
-var bodyParser = require("body-parser");
-var exphbs = require("express-handlebars");
-var mongoose = require("mongoose");
+const express = require("express");
+const bodyParser = require("body-parser");
+const exphbs = require("express-handlebars");
+const mongoose = require("mongoose");
 // Requiring our Note and Article models
-var Note = require("./models/Comment.js");
-var Article = require("./models/Article.js");
+const Note = require("./models/Comment.js");
+const Article = require("./models/Article.js");
 // Our scraping tools
-var request = require("request");
-var cheerio = require("cheerio");
+const request = require("request");
+const cheerio = require("cheerio");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
 // Initialize Express
-var app = express();
+const app = express();
 
 // Use body parser with our app
 app.use(bodyParser.urlencoded({
@@ -49,7 +49,8 @@ db.once("open", function() {
 // Routes
 // ======
 app.get("/", function(req, res) {
-
+	res.render("home", {
+	});
 });
 
 // A GET request to scrape the news website
@@ -58,13 +59,13 @@ app.get("/scrape", function(req, res) {
 	// First, we grab the body of the html with request
 	request("https://www.theringer.com/", function(error, response, html) {
 		// Then, we load that into cheerio and save it to $ for a shorthand selector
-		var $ = cheerio.load(html);
+		let $ = cheerio.load(html);
 		
 		// Now, we grab every h2 within an article tag, and do the following:
 		$("div.c-entry-box--compact__body").each(function(i, element) {
 
 			// Save an empty result object
-			var result = {};
+			let result = {};
 
 			// Add the text and href of every link, and save them as properties of the result object
 			result.headline = $(this).children("h2").text();
@@ -72,20 +73,21 @@ app.get("/scrape", function(req, res) {
 			result.summary = $(this).children("p").text();
 			//console.log(result);
 
-			var entry = new Article(result);
+			let entry = new Article(result);
 			
 			// Now, save that entry to the db
 			entry.save(function(err, doc) {
-				// Log any errors
+				// Log any errors - will likely be some duplicate entries that are caught by mongoose
 				if (err) {
 					console.log(err);
 				}
-				// Or log the doc
 				else {
 					console.log(doc);
 				}
 			});
 		});
+		// Return the data
+		return("success");
 	});
 	// Tell the browser that we finished scraping the text
 	res.send("Scrape Complete");
@@ -101,7 +103,7 @@ app.get("/articles", function(req, res) {
 		}
 		// Or send the doc to the browser as a json object
 		else {
-			//TODO: still an issue with the first document which is scraped
+			//res.json(doc);
 			res.render("index", {
 				"articles": doc,
 			});
@@ -112,13 +114,55 @@ app.get("/articles", function(req, res) {
 
 // Grab an article comments by it's ObjectId
 app.get("/articles/:id", function(req, res) {
-	
+	// Grab every doc in the Articles array
+	Article.find({ "_id": req.params.id })  
+	.populate("comment")
+	// now, execute our query
+	.exec(function(error, doc) { 
+		// Log any errors
+		if (error) {
+			console.log(error);
+		}
+		// Or send the doc to the browser as a json object
+		else {
+			//res.json(doc);
+			res.render("index", {
+				"articles": doc,
+			});
+			
+		}
+	});
 });
 
 
 // Create a new comment or replace an existing comment
 app.post("/articles/:id", function(req, res) {
-
+	// Create a new note and pass the req.body to the entry
+	var newComment = new Comment(req.body);
+	
+	// And save the new note the db
+	newComment.save(function(error, doc) {
+		// Log any errors
+		if (error) {
+			console.log(error);
+		}
+		// Otherwise
+		else {
+			// Use the article id to find and update it's note
+			Article.findOneAndUpdate({ "_id": req.params.id }, { "comment": doc._id })
+			// Execute the above query
+			.exec(function(err, doc) {
+				// Log any errors
+				if (err) {
+					console.log(err);
+				}
+				else {
+					// Or send the document to the browser
+					res.send(doc);
+				}
+			});
+		}
+	});
 });
 
 // Listen on port 8080
