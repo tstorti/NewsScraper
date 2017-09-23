@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 // Requiring our Note and Article models
-const Note = require("./models/Comment.js");
+const Comment = require("./models/Comment.js");
 const Article = require("./models/Article.js");
 // Our scraping tools
 const request = require("request");
@@ -102,13 +102,11 @@ app.get("/articles", function(req, res) {
 			console.log(error);
 		}
 		// Or send the doc to the browser as a json object
-		else {
-			//res.json(doc);
-			res.render("index", {
-				"articles": doc,
-			});
-			
-		}
+		else {}
+		//res.json(doc);
+		res.render("index", {
+			"articles": doc,
+		});
 	});
 });
 
@@ -116,7 +114,7 @@ app.get("/articles", function(req, res) {
 app.get("/articles/:id", function(req, res) {
 	// Grab every doc in the Articles array
 	Article.find({ "_id": req.params.id })  
-	.populate("comment")
+	.populate("comments")
 	// now, execute our query
 	.exec(function(error, doc) { 
 		// Log any errors
@@ -125,11 +123,8 @@ app.get("/articles/:id", function(req, res) {
 		}
 		// Or send the doc to the browser as a json object
 		else {
-			//res.json(doc);
-			res.render("index", {
-				"articles": doc,
-			});
-			
+			console.log(doc);
+			res.json(doc);
 		}
 	});
 });
@@ -137,9 +132,9 @@ app.get("/articles/:id", function(req, res) {
 
 // Create a new comment or replace an existing comment
 app.post("/articles/:id", function(req, res) {
-	// Create a new note and pass the req.body to the entry
+	// Create a new comment and pass the req.body to the entry
 	var newComment = new Comment(req.body);
-	
+	console.log(newComment);
 	// And save the new note the db
 	newComment.save(function(error, doc) {
 		// Log any errors
@@ -148,21 +143,33 @@ app.post("/articles/:id", function(req, res) {
 		}
 		// Otherwise
 		else {
-			// Use the article id to find and update it's note
-			Article.findOneAndUpdate({ "_id": req.params.id }, { "comment": doc._id })
-			// Execute the above query
-			.exec(function(err, doc) {
+			Article.findOneAndUpdate({ "_id": req.params.id },{$push: { "comments": doc._id }}, {new: true}, function(err, newdoc){
 				// Log any errors
 				if (err) {
 					console.log(err);
 				}
 				else {
 					// Or send the document to the browser
-					res.send(doc);
+					res.send(newdoc);
 				}
 			});
 		}
 	});
+});
+
+// Create a new comment or replace an existing comment
+app.delete("/comments/:id", function(req, res) {
+	
+	Comment.findByIdAndRemove(req.params.id, function(err, doc){
+		// Log any errors
+		if (err) {
+			console.log(err);
+		}
+		// Or send the doc to the browser as a json object
+		else {
+			res.json(doc);
+		}
+	});	
 });
 
 // Listen on port 8080

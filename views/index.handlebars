@@ -20,20 +20,14 @@
 		<div class="modal-content">
 			<div>
 				{{!-- Show all of the comments for the selected article --}}
-				{{#each comments}}
-				<div>
-					<div>{{title}}</div>
-					<div>{{body}}</div>
-					<button>Delete Comment</div>
-				</div>
-				{{/each}}
+				<div id="article-comments"></div>
 				{{!-- Input box for new comments --}}
 				<div class="">
 					<input type="text" class="commentsInput" placeholder="Add Comment" id="comments-new">
 				</div>
 				<div>
-					<button class="btn btn-success btn-margin js-save-comment" type="button">Save</button>
-					<button class="btn btn-danger btn-margin js-close-modal" type="button">Close</button>
+					<button class="btn btn-success btn-margin" type="button" data-id="" id="save-comment">Save</button>
+					<button class="btn btn-danger btn-margin" type="button" id="close-modal">Close</button>
 				</div>
 				<div id="error-login"></div>
 			</div>

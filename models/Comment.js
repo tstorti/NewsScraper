@@ -10,7 +10,6 @@ var CommentSchema = new Schema({
     }
 });
 
-
 // Create the Comment model with the schema
 var Comment = mongoose.model("Comment", CommentSchema);
 
