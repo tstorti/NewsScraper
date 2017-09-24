@@ -1,4 +1,7 @@
 /* css placeholder */
+.article-comments{
+    width:90%;
+}
 .articleContainer{
     padding:20px;
     margin:10px;
@@ -13,7 +16,7 @@
     margin:10px;
     box-shadow: 0 3px 6px #999, 0 3px 6px #999;
     border-radius: 2px;
-    width:60%;
+    width:400px;
 }
 .existingComments{
     padding:10px;
