@@ -186,6 +186,7 @@ app.delete("/articles/:id", function(req, res) {
 });
 
 // Listen on port 8080
-app.listen(8080, function() {
-	console.log("App running on port 8080");
+var PORT = process.env.PORT || 8080;
+app.listen(PORT, function() {
+	console.log("App running on port"+ PORT);
 });
