@@ -1,5 +1,3 @@
-/* Showing Mongoose's "Populated" Method
- * =============================================== */
 
 // Dependencies
 const express = require("express");
@@ -32,7 +30,7 @@ app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
 //replace local db with mongodB_URI
-mongoose.connect("mongodb://localhost/newsdb");
+mongoose.connect("mongodb://heroku_tt8m9nmh:hs1ld3qcah9qhbn1jj0vb2m9qu@ds141524.mlab.com:41524/heroku_tt8m9nmh");
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -130,7 +128,7 @@ app.get("/articles/:id", function(req, res) {
 });
 
 
-// Create a new comment or replace an existing comment
+// Create a new comment
 app.post("/articles/:id", function(req, res) {
 	// Create a new comment and pass the req.body to the entry
 	var newComment = new Comment(req.body);
@@ -157,7 +155,7 @@ app.post("/articles/:id", function(req, res) {
 	});
 });
 
-// Create a new comment or replace an existing comment
+// Delete a comment
 app.delete("/comments/:id", function(req, res) {
 	
 	Comment.findByIdAndRemove(req.params.id, function(err, doc){
@@ -168,6 +166,21 @@ app.delete("/comments/:id", function(req, res) {
 		// Or send the doc to the browser as a json object
 		else {
 			res.json(doc);
+		}
+	});	
+});
+
+// Delete an article
+app.delete("/articles/:id", function(req, res) {
+	
+	Article.findByIdAndRemove(req.params.id, function(err, doc){
+		// Log any errors
+		if (err) {
+			console.log(err);
+		}
+		// Or send the doc to the browser as a json object
+		else {
+			res.send(doc);
 		}
 	});	
 });

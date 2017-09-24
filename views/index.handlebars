@@ -1,36 +1,39 @@
 {{!-- Setup the `index.handlebars` to have the template that Handlebars can render onto. --}}
-
-<div>Articles</div>
-<a href="./articles"><button id="scrape" class="btn btn-primary btn-margin">Get Articles!</button></a>
-<div>--------------------------------------------</div>
-{{#each articles }}
-	<h4>{{headline}}</h4>
-	<div>{{summary}}</div>
-	<div>
-		<a href="{{url}}">{{url}}</a>
+<div class="container">
+	<div class="container">
+		<h1 class="jumbotron">News Scraper</h1>
+		<a href="./articles"><button id="scrape" class="btn btn-info btn-margin">Scrape Articles!</button></a>
 	</div>
-	<div>
-		<button data-id="{{_id}}" class='btn btn-primary btn-margin js-show-comments'>Comments</button>
-		<button data-id="{{_id}}" class='btn btn-danger btn-margin js-delete'>Delete Article</button>
-	</div>
-	<div> --------------------------------</div>
-{{/each}}
-<div class="modal fade" id="comments" tabindex="-1" role="dialog" >
-	<div class="modal-dialog">
-		<div class="modal-content">
+	{{#each articles }}
+		<div class="articleContainer container" id="{{_id}}">
+			<h4>{{headline}}</h4>
+			<div>{{summary}}</div>
 			<div>
-				{{!-- Show all of the comments for the selected article --}}
-				<div id="article-comments"></div>
-				{{!-- Input box for new comments --}}
-				<div class="">
-					<input type="text" class="commentsInput" placeholder="Add Comment" id="comments-new">
-				</div>
+				<a href="{{url}}">{{url}}</a>
+			</div>
+			<div>
+				<button data-id="{{_id}}" class='btn btn-primary btn-margin js-show-comments'>Comments</button>
+				<button data-id="{{_id}}" class='btn btn-danger btn-margin js-delete'>Delete Article</button>
+			</div>
+		</div>
+	{{/each}}
+	<div class="modal fade" id="comments" tabindex="-1" role="dialog" >
+		<div class="modal-dialog">
+			<div class="modal-content">
 				<div>
-					<button class="btn btn-success btn-margin" type="button" data-id="" id="save-comment">Save</button>
-					<button class="btn btn-danger btn-margin" type="button" id="close-modal">Close</button>
+					{{!-- Show all of the comments for the selected article --}}
+					<div class = "container" id="article-comments"></div>
+					{{!-- Input box for new comments --}}
+					<div class="">
+						<textarea type="text" class="commentsInput" placeholder="Add Comment" id="comments-new"></textarea>
+					</div>
+					<div>
+						<button class="btn btn-success btn-margin" type="button" data-id="" id="save-comment">Save</button>
+						<button class="btn btn-danger btn-margin" type="button" id="close-modal">Close</button>
+					</div>
+					<div id="error-login"></div>
 				</div>
-				<div id="error-login"></div>
 			</div>
 		</div>
 	</div>
-</div> 
+</div>
